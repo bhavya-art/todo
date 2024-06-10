@@ -4,6 +4,7 @@ import com.example.demo.models.Task;
 import com.example.demo.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.Date;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ public class TaskService {
     private TaskRepository taskRepository;
 
     public Task createNewTask(Task task) {
+        task.setDateAdded(new Date());
         return taskRepository.save(task);
     }
 
@@ -32,8 +34,8 @@ public class TaskService {
         return taskRepository.findByCompletedFalse();
     }
 
-    public void deleteTask(Task task) {
-        taskRepository.delete(task);
+    public void deleteTask(Long id) {
+        taskRepository.deleteById(id);
     }
 
     public Task updateTask(Task task) {

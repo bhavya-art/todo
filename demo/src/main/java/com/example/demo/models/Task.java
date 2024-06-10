@@ -1,6 +1,7 @@
 package com.example.demo.models;
 
 import jakarta.persistence.*;
+import java.util.Date;
 
 
 @Entity
@@ -11,10 +12,18 @@ public class Task {
     private Long id;
     private String task;
     private boolean completed;
+    private boolean deleted;
+    @Column(nullable = false, updatable = false)
 
-    public Task(String task, boolean completed) {
+    @CreatedDate
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date dateAdded;
+
+    public Task(String task, boolean completed,boolean deleted) {
         this.task = task;
         this.completed = completed;
+        this.deleted = deleted;
+        this.dateAdded = new Date();
     }
 
     public Task() {
@@ -38,5 +47,14 @@ public class Task {
     }
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+    public boolean isDeleted() {return deleted;};
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;}
+    public Date getDateAdded() {
+        return dateAdded;
+    }
+    public void setDateAdded(Date dateAdded) {
+        this.dateAdded = dateAdded;
     }
 }

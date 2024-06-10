@@ -31,14 +31,19 @@ public class TaskController {
     public ResponseEntity<Task> createTask(@RequestBody Task task) {
         return ResponseEntity.ok(taskService.createNewTask(task));
     }
-    @PutMapping("/")
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
-        task.setId(id);
-        return ResponseEntity.ok(taskService.updateTask(task));
+    @PutMapping("/{id}")
+    public ResponseEntity<Task> updateTask(@PathVariable("id") Long id, @RequestBody Task updatedTask) {
+        Task existingTask = taskService.findTaskById(id);
+        existingTask.setTask(updatedTask.getTask());
+        existingTask.setCompleted(updatedTask.isCompleted());
+        Task savedTask = taskService.updateTask(existingTask);
+        return ResponseEntity.ok(savedTask);
     }
-    @DeleteMapping("/")
-    public ResponseEntity<Boolean> getAllTasks(@PathVariable Task task) {
-        taskService.deleteTask(task);
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> getAllTasks(@PathVariable("id") Long id) {
+        taskService.deleteTask(id);
         return ResponseEntity.ok(true);
     }
 }
