@@ -13,6 +13,10 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
+    public void setTaskRepository(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
+
     public Task createNewTask(Task task) {
         task.setDateAdded(new Date());
         return taskRepository.save(task);
