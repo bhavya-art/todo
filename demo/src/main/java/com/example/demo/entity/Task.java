@@ -1,13 +1,16 @@
-package com.example.demo.models;
+package com.example.demo.entity;
+
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import java.util.Date;
 
+import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@Data
 @EntityListeners(AuditingEntityListener.class)
 public class Task {
     @Id
@@ -23,55 +26,21 @@ public class Task {
     @Column(nullable = false, updatable = false)
     @CreatedDate
     private Date dateAdded;
+    private Long userId;
 
-    public Task(String task, boolean completed, boolean deleted) {
+    public Task(String task, boolean completed, boolean deleted,Long userId) {
         this.task = task;
         this.completed = completed;
         this.deleted = deleted;
         this.dateAdded = new Date(); // This will be overridden by @CreatedDate
+        this.userId=userId;
     }
 
     public Task() {
         // Default constructor
     }
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public String getTask() {
-        return task;
-    }
 
-    public void setTask(String task) {
-        this.task = task;
-    }
-
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    public Date getDateAdded() {
-        return dateAdded;
-    }
-
-    public void setDateAdded(Date dateAdded) {
-        this.dateAdded = dateAdded;
-    }
 }

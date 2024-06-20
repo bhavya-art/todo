@@ -1,6 +1,6 @@
 package com.example.demo.repositories;
 
-import com.example.demo.models.Task;
+import com.example.demo.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +13,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     public List<Task> findByCompletedFalse();
     public List<Task> findAll();
     public Task getById(Long id);
+    public List<Task> findByUserId(Long userId);
 
 }

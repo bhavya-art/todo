@@ -1,9 +1,16 @@
 package com.example.demo.services;
 
-import com.example.demo.models.Task;
+import com.example.demo.entity.Task;
+import com.example.demo.models.TaskRequest;
+import com.example.demo.models.TaskResponse;
+import com.example.demo.entity.User;
 import com.example.demo.repositories.TaskRepository;
+import com.example.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.Date;
 
 import java.util.List;
@@ -12,14 +19,26 @@ import java.util.List;
 public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public void setTaskRepository(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
-    public Task createNewTask(Task task) {
+    public TaskResponse createNewTask(TaskRequest taskRequest) {
+        User user = userRepository.findByUsername(taskRequest.getUsername());
+        if(user == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User Not Found");
+        }
+        Task task = new Task();
+        task.setTask(taskRequest.getTask());
         task.setDateAdded(new Date());
-        return taskRepository.save(task);
+        task.setUserId(user.getUserId());
+        taskRepository.save(task);
+
+        return TaskResponse.builder().task(task.getTask()).build();
     }
 
     public List<Task> getAllTask() {

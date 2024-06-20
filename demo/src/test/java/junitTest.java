@@ -1,7 +1,8 @@
-package com.example.demo.models;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.example.demo.entity.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +13,7 @@ public class junitTest {
 
     @BeforeEach
     public void setUp() {
-        task = new Task("Write JUnit tests", false, false);
+        task = new Task("Write JUnit tests", false, false, 1234L);
     }
 
     @Test

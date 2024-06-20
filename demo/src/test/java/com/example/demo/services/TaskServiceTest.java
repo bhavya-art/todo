@@ -1,14 +1,14 @@
 package com.example.demo.services;
 
-import com.example.demo.models.Task;
+import com.example.demo.entity.Task;
 
+import com.example.demo.models.TaskRequest;
+import com.example.demo.models.TaskResponse;
 import com.example.demo.repositories.TaskRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
@@ -24,10 +24,10 @@ public class TaskServiceTest {
 
     @Test
     public void shouldCreateTask(){
-        Task task = new Task();
+        TaskRequest task = new TaskRequest();
         task.setTask("junit test");
         task.setCompleted(false);
-        Task tasknew = taskService.createNewTask(task);
+        TaskResponse tasknew = taskService.createNewTask(task);
         List<Task> tasks = taskService.getAllTask();
         taskService.findTaskById(tasknew.getId());
         assertThat(tasks).hasSize(1);

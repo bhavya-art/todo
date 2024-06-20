@@ -1,6 +1,8 @@
 package com.example.demo.controllers;
 
-import com.example.demo.models.Task;
+import com.example.demo.entity.Task;
+import com.example.demo.models.TaskRequest;
+import com.example.demo.models.TaskResponse;
 import com.example.demo.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +30,8 @@ public class TaskController {
         return ResponseEntity.ok(taskService.findAllInCompleteTask());
     }
     @PostMapping("/")
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        return ResponseEntity.ok(taskService.createNewTask(task));
+    public ResponseEntity<TaskResponse> createTask(@RequestBody TaskRequest taskRequest) {
+        return ResponseEntity.ok(taskService.createNewTask(taskRequest));
     }
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable("id") Long id, @RequestBody Task updatedTask) {

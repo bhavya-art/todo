@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
-import com.example.demo.models.Task;
+import com.example.demo.entity.Task;
+import com.example.demo.models.TaskRequest;
 import com.example.demo.repositories.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,10 +10,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
-import static org.mockito.ArgumentMatchers.anyLong;
 
 
 import static org.mockito.Mockito.verify;
@@ -33,9 +33,10 @@ public class TaskServiceUnitTest {
 
     @Test
     public void shouldCreate(){
+        TaskRequest taskrequest = new TaskRequest();
         Task task = new Task();
         when(taskRepository.save(task)).thenReturn(task);
-        taskService.createNewTask(task);
+        taskService.createNewTask(taskrequest);
     }
     @Test
     public void shouldGetAllTasks(){
@@ -53,7 +54,7 @@ public class TaskServiceUnitTest {
         Task task = new Task();
         task.setTask("Task by id");
         Long taskId = 1L;
-        when(taskRepository.findById(any(Long.class))).thenReturn(Optional.of(task));
+        when(taskRepository.getById(taskId)).thenReturn(task);
         taskService.findTaskById(taskId);
         verify(taskRepository, times(1)).getById(taskId);
     }

@@ -1,12 +1,9 @@
-package com.example.demo.models;
+package com.example.demo.entity;
 import jakarta.persistence.*;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.util.List;
 
 @Entity
 @Data
@@ -15,10 +12,12 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userid;
+    private Long userId;
     private String username;
-    @OneToMany(mappedBy = "user",orphanRemoval = true)
-    private List<Task> tasks;
+    private String firstName;
+    private String lastName;
+    private int age;
+    private String password;
     private Date datecreated;
 
 
