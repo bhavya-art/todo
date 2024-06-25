@@ -19,10 +19,14 @@ public class UserService {
     }
 
     public UserResponse createUser(UserRequest userRequest) {
-        User user=new User();
+        User user = new User();
         user.setUsername(userRequest.getUserName());
         user.setDatecreated(new Date());
         user.setUserId(user.getUserId());
+        user.setPassword(userRequest.getPassword());
+        user.setAge(userRequest.getAge());
+        user.setFirstName(userRequest.getFirstName());
+        user.setLastName(userRequest.getLastName());
         userRepository.save(user);
         return UserResponse.builder().userName(user.getUsername()).build();
     }
@@ -30,5 +34,9 @@ public class UserService {
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
 
+    }
+
+    public boolean isValidUsername(String username) {
+        return userRepository.existsByUsername(username);
     }
 }
