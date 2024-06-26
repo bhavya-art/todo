@@ -36,6 +36,7 @@ public class TaskService {
         task.setTask(taskRequest.getTask());
         task.setDateAdded(new Date());
         task.setUserId(user.getUserId());
+        task.setUserName(user.getUsername());
         taskRepository.save(task);
 
         return TaskResponse.builder().task(task.getTask()).build();
@@ -57,11 +58,24 @@ public class TaskService {
         return taskRepository.findByCompletedFalse();
     }
 
-    public void deleteTask(Long id) {
-        taskRepository.deleteById(id);
+    public void deleteTask(String username,Long id) {
+        User user = userRepository.findByUsername(username);
+        if(user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
+        }
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task Not Found"));
+
+        if (!task.getUserId().equals(user.getUserId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not have permission to delete this task");
+        }
+
+        taskRepository.delete(task);
+
     }
 
     public Task updateTask(Task task) {
         return taskRepository.save(task);
     }
+
 }

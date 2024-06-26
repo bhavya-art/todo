@@ -19,6 +19,10 @@ public class UserService {
     }
 
     public UserResponse createUser(UserRequest userRequest) {
+        if(isValidUsername(userRequest.getUserName()))
+        {
+            throw new IllegalArgumentException("Username already exists");
+        }
         User user = new User();
         user.setUsername(userRequest.getUserName());
         user.setDatecreated(new Date());
@@ -27,8 +31,8 @@ public class UserService {
         user.setAge(userRequest.getAge());
         user.setFirstName(userRequest.getFirstName());
         user.setLastName(userRequest.getLastName());
-        userRepository.save(user);
-        return UserResponse.builder().userName(user.getUsername()).build();
+        user=userRepository.save(user);
+        return UserResponse.builder().userName(user.getUsername()).dateCreated(user.getDatecreated()).firstName(user.getFirstName()).lastName(user.getLastName()).age(user.getAge()).build();
     }
 
     public void deleteUser(Long userId) {
@@ -36,7 +40,7 @@ public class UserService {
 
     }
 
-    public boolean isValidUsername(String username) {
-        return userRepository.existsByUsername(username);
+    public boolean isValidUsername(String userName) {
+        return userRepository.existsByUsername(userName);
     }
 }

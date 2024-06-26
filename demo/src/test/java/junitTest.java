@@ -13,7 +13,7 @@ public class junitTest {
 
     @BeforeEach
     public void setUp() {
-        task = new Task("Write JUnit tests", false, false, 1234L);
+        task = new Task("Write JUnit tests", false, false, 1234L,"red");
     }
 
     @Test

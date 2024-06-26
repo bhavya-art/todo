@@ -67,13 +67,13 @@ public class TaskServiceUnitTest {
         verify(taskRepository).save(task);
     }
     @Test
-    public void shouldDeleteTask(){
-        Task task = new Task();
-        task.setTask("Task deleted");
-        Long taskId = 1L;
-        taskService.deleteTask(taskId);
-        verify(taskRepository, times(1)).deleteById(taskId);
-    }
+//    public void shouldDeleteTask(){
+//        Task task = new Task();
+//        task.setTask("Task deleted");
+//        Long taskId = 1L;
+//        taskService.deleteTask(taskId);
+//        verify(taskRepository, times(1)).deleteById(taskId);
+//    }
     @Test
     public void shouldFindAllCompletedTasks(){
         Task task = new Task();

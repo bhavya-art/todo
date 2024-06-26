@@ -21,7 +21,7 @@ public class TaskController {
     private TaskService taskService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Task>> getAllTasks() {
+    public ResponseEntity<List<Task>> getAllTask() {
         log.info("Request to return all tasks");
         return ResponseEntity.ok(taskService.getAllTask());
     }
@@ -57,10 +57,10 @@ public class TaskController {
     }
 
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> getAllTasks(@PathVariable("id") Long id) {
+    @DeleteMapping("/{username}/{id}")
+    public ResponseEntity<Boolean> getAllTasks(@PathVariable("username")String username,@PathVariable("id") Long id) {
         log.info("Request to delete task");
-        taskService.deleteTask(id);
+        taskService.deleteTask(username,id);
         return ResponseEntity.ok(true);
     }
 }

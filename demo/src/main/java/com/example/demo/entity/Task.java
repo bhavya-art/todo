@@ -27,13 +27,15 @@ public class Task {
     @CreatedDate
     private Date dateAdded;
     private Long userId;
+    private String userName;
 
-    public Task(String task, boolean completed, boolean deleted,Long userId) {
+    public Task(String task, boolean completed, boolean deleted,Long userId,String username) {
         this.task = task;
         this.completed = completed;
         this.deleted = deleted;
         this.dateAdded = new Date(); // This will be overridden by @CreatedDate
         this.userId=userId;
+        this.userName=username;
     }
 
     public Task() {

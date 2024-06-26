@@ -26,7 +26,7 @@ public class TaskServiceTest {
     public void shouldCreateTask(){
         TaskRequest task = new TaskRequest();
         task.setTask("junit test");
-        task.setCompleted(false);
+        //task.setCompleted(false);
         TaskResponse tasknew = taskService.createNewTask(task);
         List<Task> tasks = taskService.getAllTask();
         taskService.findTaskById(tasknew.getId());
