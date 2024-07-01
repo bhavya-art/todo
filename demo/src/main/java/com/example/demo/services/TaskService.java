@@ -35,7 +35,7 @@ public class TaskService {
         Task task = new Task();
         task.setTask(taskRequest.getTask());
         task.setDateAdded(new Date());
-        task.setUserId(user.getUserId());
+        task.setUserId(user.getId());
         task.setUserName(user.getUsername());
         taskRepository.save(task);
 
@@ -66,7 +66,7 @@ public class TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task Not Found"));
 
-        if (!task.getUserId().equals(user.getUserId())) {
+        if (!task.getUserId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not have permission to delete this task");
         }
 

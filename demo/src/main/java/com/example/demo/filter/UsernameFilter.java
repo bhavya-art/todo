@@ -28,7 +28,7 @@ public class UsernameFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String uri = request.getRequestURI();
-        Stream<String> stream = Stream.of("/api/v1/users");
+        Stream<String> stream = Stream.of("/auth/signup");
         return stream.anyMatch(uri::contains);
     }
 
