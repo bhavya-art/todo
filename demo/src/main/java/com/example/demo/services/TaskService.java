@@ -36,7 +36,7 @@ public class TaskService {
         task.setTask(taskRequest.getTask());
         task.setDateAdded(new Date());
         task.setUserId(user.getId());
-        task.setUserName(user.getUsername());
+        task.setUsername(user.getUsername());
         taskRepository.save(task);
 
         return TaskResponse.builder().task(task.getTask()).build();

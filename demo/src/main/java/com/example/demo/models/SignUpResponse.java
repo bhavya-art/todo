@@ -9,8 +9,8 @@ import lombok.Data;
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SIgnUpResponse {
-    private String userName;
+public class SignUpResponse {
+    private String username;
     private String email;
     private String fullName;
     private String password;

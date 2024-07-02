@@ -2,8 +2,8 @@ package com.example.demo.controllers;
 import com.example.demo.entity.User;
 import com.example.demo.dtos.LoginUserDto;
 import com.example.demo.dtos.RegisterUserDto;
+import com.example.demo.models.SignUpResponse;
 import com.example.demo.models.LoginResponse;
-import com.example.demo.models.SIgnUpResponse;
 import com.example.demo.services.AuthenticationService;
 import com.example.demo.services.JwtService;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +25,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody RegisterUserDto registerUserDto) {
-        User registeredUser = authenticationService.signup(SIgnUpResponse);
+    public ResponseEntity<SignUpResponse> register(@RequestBody RegisterUserDto registerUserDto) {
+        SignUpResponse signUpResponse = authenticationService.signup(registerUserDto);
 
-        return ResponseEntity.ok(registeredUser);
+        return ResponseEntity.ok(signUpResponse);
     }
 
     @PostMapping("/login")

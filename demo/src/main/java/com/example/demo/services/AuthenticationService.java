@@ -2,7 +2,7 @@ package com.example.demo.services;
 
 import com.example.demo.dtos.LoginUserDto;
 import com.example.demo.dtos.RegisterUserDto;
-
+import com.example.demo.models.SignUpResponse;
 import com.example.demo.entity.User;
 import com.example.demo.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,13 +28,19 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User signup(RegisterUserDto input) {
+    public SignUpResponse signup(RegisterUserDto input) {
         User user = new User();
         user.setFullName(input.getFullName());
         user.setEmail(input.getEmail());
         user.setPassword(passwordEncoder.encode(input.getPassword()));
         user.setUsername(input.getUsername());
-        return userRepository.save(user);
+        user = userRepository.save(user);
+        return SignUpResponse.builder()
+                .username(user.getUsername())
+                .fullName(user.getFullName())
+                .email(user.getEmail())
+                .build();
+
     }
 
     public User authenticate(LoginUserDto input) {
