@@ -12,6 +12,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.example.demo.config.JwtAuthenticationFilter;
+import com.example.demo.services.JwtService;
 
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class SecurityConfiguration {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {

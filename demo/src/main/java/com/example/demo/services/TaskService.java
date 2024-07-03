@@ -27,21 +27,22 @@ public class TaskService {
     }
 
     public TaskResponse createNewTask(TaskRequest taskRequest) {
-        User user = userRepository.findByUsername(taskRequest.getUsername());
-        if(user == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "User Not Found");
-        }
         Task task = new Task();
         task.setTask(taskRequest.getTask());
-        task.setDateAdded(new Date());
-        task.setUserId(user.getId());
-        task.setUsername(user.getUsername());
-        taskRepository.save(task);
+        task.setUsername(taskRequest.getUsername());
+        task = taskRepository.save(task);
 
-        return TaskResponse.builder().task(task.getTask()).build();
+        TaskResponse response = new TaskResponse();
+        response.setId(task.getId());
+        response.setTask(task.getTask());
+        response.setCompleted(task.isCompleted());
+        response.setUsername(task.getUsername());
+
+        return response;
     }
-
+    public List<Task> getAllTasksByUsername(String username) {
+        return taskRepository.findByUsername(username);
+    }
     public List<Task> getAllTask() {
         return taskRepository.findAll();
     }
@@ -66,9 +67,7 @@ public class TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task Not Found"));
 
-        if (!task.getUserId().equals(user.getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not have permission to delete this task");
-        }
+
 
         taskRepository.delete(task);
 

@@ -33,13 +33,13 @@ public class Task {
         this.task = task;
         this.completed = completed;
         this.deleted = deleted;
-        this.dateAdded = new Date(); // This will be overridden by @CreatedDate
+        this.dateAdded = new Date();
         this.userId=userId;
         this.username=username;
     }
 
     public Task() {
-        // Default constructor
+
     }
 
 

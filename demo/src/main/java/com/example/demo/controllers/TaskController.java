@@ -3,10 +3,15 @@ package com.example.demo.controllers;
 import com.example.demo.entity.Task;
 import com.example.demo.models.TaskRequest;
 import com.example.demo.models.TaskResponse;
+import com.example.demo.services.JwtService;
 import com.example.demo.services.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,11 +24,13 @@ public class TaskController {
 
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private JwtService jwtService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Task>> getAllTask() {
-        log.info("Request to return all tasks");
-        return ResponseEntity.ok(taskService.getAllTask());
+    public ResponseEntity<List<Task>> getAllTasks(@AuthenticationPrincipal UserDetails userDetails) {
+        log.info("Request to return all tasks for user: {}", userDetails.getUsername());
+        return ResponseEntity.ok(taskService.getAllTasksByUsername(userDetails.getUsername()));
     }
     @GetMapping("/completed")
     public ResponseEntity<List<Task>> getAllCompletedTasks() {
@@ -37,7 +44,10 @@ public class TaskController {
     }
     @PostMapping("/")
     public ResponseEntity<TaskResponse> createTask(@RequestBody TaskRequest taskRequest) {
-        log.info("Request to create a task");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        log.info("Request to create a task for user: {}", username);
+        taskRequest.setUsername(username);  // Set the username in TaskRequest
         return ResponseEntity.ok(taskService.createNewTask(taskRequest));
     }
     @PutMapping("/{id}")
