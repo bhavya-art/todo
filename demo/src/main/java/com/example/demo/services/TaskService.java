@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Date;
-
 import java.util.List;
 
 @Service
@@ -27,54 +25,51 @@ public class TaskService {
     }
 
     public TaskResponse createNewTask(TaskRequest taskRequest) {
+        User user = userRepository.findByUsername(taskRequest.getUsername()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found"));
+
         Task task = new Task();
         task.setTask(taskRequest.getTask());
-        task.setUsername(taskRequest.getUsername());
+        task.equals(taskRequest.getUsername());
+        task.setUser(user); // Setting the user for the task
+
         task = taskRepository.save(task);
 
         TaskResponse response = new TaskResponse();
         response.setId(task.getId());
         response.setTask(task.getTask());
         response.setCompleted(task.isCompleted());
-        response.setUsername(task.getUsername());
+        response.setDateAdded(task.getDateAdded());
 
         return response;
     }
+
     public List<Task> getAllTasksByUsername(String username) {
         return taskRepository.findByUsername(username);
     }
-    public List<Task> getAllTask() {
+
+    public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }
 
     public Task findTaskById(Long id) {
-        return taskRepository.getById(id);
-    }
-
-    public List<Task> findAllCompletedTask() {
-        return taskRepository.findByCompletedTrue();
-    }
-
-    public List<Task> findAllInCompleteTask() {
-        return taskRepository.findByCompletedFalse();
-    }
-
-    public void deleteTask(String username,Long id) {
-        User user = userRepository.findByUsername(username);
-        if(user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
-        }
-        Task task = taskRepository.findById(id)
+        return taskRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task Not Found"));
+    }
 
+    public List<Task> findAllCompletedTaskByUsername(String username) {
+        return taskRepository.findByUsernameAndCompletedTrue(username);
+    }
 
+    public List<Task> findAllIncompleteTaskByUsername(String username) {
+        return taskRepository.findByUsernameAndCompletedFalse(username);
+    }
 
+    public void deleteTask(Long id) {
+        Task task = findTaskById(id);
         taskRepository.delete(task);
-
     }
 
     public Task updateTask(Task task) {
         return taskRepository.save(task);
     }
-
 }

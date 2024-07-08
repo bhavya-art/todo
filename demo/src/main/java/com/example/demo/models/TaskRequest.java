@@ -10,4 +10,6 @@ import lombok.Data;
 public class TaskRequest {
     private String username;
     private String task;
+
 }
+

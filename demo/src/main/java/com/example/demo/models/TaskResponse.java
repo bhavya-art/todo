@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @Builder
 @NoArgsConstructor  // No-argument constructor
@@ -17,5 +19,5 @@ public class TaskResponse {
     private Long id;
     private String task;
     private Boolean completed;
-    private String username;
+    private Date dateAdded;
 }

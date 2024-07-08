@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -25,10 +26,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Long id;
 
-    // Set the username field
     @Setter
     @Column(nullable = false, name="user_name")
-    private String username;  // Use "username" consistently
+    private String username;
 
     @Column(nullable = false)
     private String fullName;
@@ -47,6 +47,9 @@ public class User implements UserDetails {
     @Column(name = "updated_at")
     private Date updatedAt;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Task> tasks;
+
     @Override
     public String getUsername() {
         return username;
@@ -55,6 +58,10 @@ public class User implements UserDetails {
     @Override
     public String getPassword() {
         return password;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     @Override

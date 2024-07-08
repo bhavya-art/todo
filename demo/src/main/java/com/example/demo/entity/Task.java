@@ -14,7 +14,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotBlank(message = "Task description cannot be blank")
@@ -26,15 +26,16 @@ public class Task {
     @Column(nullable = false, updatable = false)
     @CreatedDate
     private Date dateAdded;
-    private Long userId;
-    private String username;
 
+    private String username;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
     public Task(String task, boolean completed, boolean deleted,Long userId,String username) {
         this.task = task;
         this.completed = completed;
         this.deleted = deleted;
         this.dateAdded = new Date();
-        this.userId=userId;
         this.username=username;
     }
 
