@@ -31,6 +31,7 @@ public class TaskService {
         task.setTask(taskRequest.getTask());
         task.equals(taskRequest.getUsername());
         task.setUser(user); // Setting the user for the task
+        task.setUsername(user.getUsername());
 
         task = taskRepository.save(task);
 
@@ -39,6 +40,7 @@ public class TaskService {
         response.setTask(task.getTask());
         response.setCompleted(task.isCompleted());
         response.setDateAdded(task.getDateAdded());
+        response.setUsername(user.getUsername());
 
         return response;
     }

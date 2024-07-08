@@ -20,4 +20,5 @@ public class TaskResponse {
     private String task;
     private Boolean completed;
     private Date dateAdded;
+    private String username;
 }

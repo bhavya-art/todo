@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/api/v1/tasks")
@@ -26,25 +27,47 @@ public class TaskController {
     @Autowired
     private JwtService jwtService;
 
+    private TaskResponse convertToResponse(Task task) {
+        TaskResponse response = new TaskResponse();
+        response.setId(task.getId());
+        response.setTask(task.getTask());
+        response.setCompleted(task.isCompleted());
+        response.setDateAdded(task.getDateAdded());
+        response.setUsername(task.getUser().getUsername());
+        return response;
+    }
+
     // Get all tasks for the authenticated user
     @GetMapping("/")
-    public ResponseEntity<List<Task>> getAllTasks(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<List<TaskResponse>> getAllTasks(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("Request to return all tasks for user: {}", userDetails.getUsername());
-        return ResponseEntity.ok(taskService.getAllTasksByUsername(userDetails.getUsername()));
+        List<TaskResponse> taskResponses = taskService.getAllTasksByUsername(userDetails.getUsername())
+                .stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(taskResponses);
     }
 
     // Get all completed tasks for the authenticated user
     @GetMapping("/completed")
-    public ResponseEntity<List<Task>> getAllCompletedTasks(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<List<TaskResponse>> getAllCompletedTasks(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("Request to return all completed tasks for user: {}", userDetails.getUsername());
-        return ResponseEntity.ok(taskService.findAllCompletedTaskByUsername(userDetails.getUsername()));
+        List<TaskResponse> taskResponses = taskService.findAllCompletedTaskByUsername(userDetails.getUsername())
+                .stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(taskResponses);
     }
 
     // Get all incomplete tasks for the authenticated user
     @GetMapping("/incomplete")
-    public ResponseEntity<List<Task>> getAllIncompleteTasks(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<List<TaskResponse>> getAllIncompleteTasks(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("Request to return all incomplete tasks for user: {}", userDetails.getUsername());
-        return ResponseEntity.ok(taskService.findAllIncompleteTaskByUsername(userDetails.getUsername()));
+        List<TaskResponse> taskResponses = taskService.findAllIncompleteTaskByUsername(userDetails.getUsername())
+                .stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(taskResponses);
     }
 
     // Create a new task for the authenticated user
@@ -53,19 +76,20 @@ public class TaskController {
         String username = userDetails.getUsername();
         log.info("Request to create a task for user: {}", username);
         taskRequest.setUsername(username);
-        return ResponseEntity.ok(taskService.createNewTask(taskRequest));
+        TaskResponse taskResponse = taskService.createNewTask(taskRequest);
+        return ResponseEntity.ok(taskResponse);
     }
 
     // Update a task for the authenticated user
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable("id") Long id, @RequestBody Task updatedTask, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<TaskResponse> updateTask(@PathVariable("id") Long id, @RequestBody Task updatedTask, @AuthenticationPrincipal UserDetails userDetails) {
         Task savedTask;
         try {
             Task existingTask = taskService.findTaskById(id);
             log.info("Found existing task: {}", existingTask);
 
             // Check if the task belongs to the authenticated user
-            if (!existingTask.getUser().getEmail().equals(userDetails.getUsername())) {
+            if (!existingTask.getUser().getUsername().equals(userDetails.getUsername())) {
                 return ResponseEntity.status(403).build();
             }
 
@@ -76,7 +100,7 @@ public class TaskController {
             log.error("Something failed", e);
             return ResponseEntity.internalServerError().build();
         }
-        return ResponseEntity.ok(savedTask);
+        return ResponseEntity.ok(convertToResponse(savedTask));
     }
 
     // Delete a task for the authenticated user
@@ -85,7 +109,7 @@ public class TaskController {
         log.info("Request to delete task");
 
         Task task = taskService.findTaskById(id);
-        if (task == null || !task.getUser().getEmail().equals(userDetails.getUsername())) {
+        if (task == null || !task.getUser().getUsername().equals(userDetails.getUsername())) {
             return ResponseEntity.status(403).build();
         }
 
